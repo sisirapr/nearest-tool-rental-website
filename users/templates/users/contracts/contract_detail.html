@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Contract Details</h2>
+  <hr>
+  {% ifequal object.owner request.user %}<!-- Im the owner -->
+    	<article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">Client Details</div>
+            <div class="row padding">
+              <div class="col-md-4">
+                <img class="rounded-circle account-img" src="{{ object.client.profile.image.url }}" width="200" height="200">
+              </div>
+              <div>
+                <h2 class="article-title">{{ object.client.first_name }} {{ object.client.last_name }}</h2>
+                <b>Email id: </b>{{ object.client.email }}<br>
+                  <b>Phone no: </b>{{ object.client.phone }}<br>
+                  <b>Address: </b>{{ object.client.address }}
+              </div>
+            </div>
+          </div>
+      </article>
+  {% else %}<!-- Im client -->
+      <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">Owner Details</div>
+            <div class="row padding">
+              <div class="col-md-4">
+                <img class="rounded-circle account-img" src="{{ object.owner.profile.image.url }}" width="200" height="200">
+              </div>
+              <div>
+                <h2 class="article-title">{{ object.owner.first_name }} {{ object.owner.last_name }}</h2>
+                <b>Email id: </b>{{ object.owner.email }}<br>
+                  <b>Phone no: </b>{{ object.owner.phone }}<br>
+                  <b>Address: </b>{{ object.owner.address }}
+              </div>
+            </div>
+          </div>
+      </article>
+  {% endifequal %}
+
+      <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata d-flex justify-content-between">Contract Details 
+              <small>Due on </small>
+            </div>
+            <div class="row padding">
+              <div class="col-md-4">
+                <img class="img-thumbnail" src="{{ object.post.image.url }}" width="200" height="200">
+              </div>
+              <div>
+                <h2 class="article-title">{{ object.post.tool }}</h2>
+                <div class="text-muted">{{ object.post.content }}</div>
+                Rent: <b>{{ object.post.rent }}</b> {{ object.post.rent_type }}<br>
+                Rating: {{ object.post.rating|floatformat:1 }}<br>
+                <a href="{% url 'rate-post' object.id %}" class="btn btn-outline-info">Rate Tool</a>
+
+            
+              <hr>
+                <h2 class="article-title">Contract Details</h2><hr>
+                <b>Contract start date: </b>{{ object.start_date }}<br>
+                <b>Contract period: </b>{{ object.period }}
+                      {% if "Hour" in object.post.rent_type %}
+                        Hour
+                      {% elif "Day" in object.post.rent_type %}
+                        Day
+                      {% elif "Week" in object.post.rent_type %}
+                        Week
+                      {% elif "Month" in object.post.rent_type %}
+                        Month
+                      {% elif "Year" in object.post.rent_type %}
+                        Year
+                      {% endif %}<br>
+                  <b>Total rent: </b>{{ object.total_rent }} Rs<br>
+                  <b>Contract Status: </b>{{ object.status }}<br>
+              </div>
+            </div>
+          </div>
+      </article>
+
+{% endblock content %}
+
+{% block sidebar %}
+<br><br><br>
+  <div class="content-section">
+        <h3>Status bar</h3>
+            <p class='text-muted'>
+              <ul class="list-group">
+                
+                  {% ifequal object.owner request.user %}<!-- owner side -->
+                    <li class="list-group-item list-group-item-light">
+                      <div style="color:green;">Contract has started -by client. </div>
+                    </li>
+                    {% if object.status >= 1 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:darkgreen;">I handed over the tool. </div>
+                      </li>
+                    {% endif %}
+                    {% if object.status >= 2 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:green;">Tool receival confirmed -by client. </div><br>
+                      </li>
+                    {% endif %}
+                    {% if object.status >= 3 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:green;">Payment done -by client. </div><br>
+                      </li>
+                    {% endif %}
+                    {% if object.status >= 4 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:darkgreen;">Payment received. </div><br>
+                      </li>
+                    {% endif %}
+                    {% if object.status >= 5 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:green;">Tool given back -by client. </div><br>
+                      </li>
+                    {% endif %}
+                    {% if object.status == 6 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:red;">Tool received and contract finished. </div><br>
+                      </li>
+                    {% endif %}
+
+
+                    {% if object.status == 0 %}
+                      Check the profile of the client when the client approaches for the tool.Then you can hand over the tool and wait for the client to approve that they got the tool.
+                      <br><a href="{% url 'status1' object.id %}" class="btn btn-info">Tool Handed over</a>
+                    {% elif object.status == 1 %}
+                      <div style="color:red;">Tool handover not confirmed by the client. </div>If you have handed over the tool make sure the client confirmed it. 
+                    {% elif object.status == 2 %}
+                      After the tool receival client must pay rent.
+                    {% elif object.status == 3 %}
+                      If you received the payment, confirm it.
+                      <br><a type="submit" href="{% url 'status4' object.id %}" class="btn btn-info">Payment received</a>
+                    {% elif object.status == 4 %}
+                      Check the due date/time. On due date/time go and bring back the tool.
+                      <br><a type="submit" href="{% url 'status6' object.id %}" class="btn btn-danger">Tool received. Finish contract.</a>
+                    {% elif object.status == 5 %}
+                      If you have received the tool, then confirm it and finish the contract.
+                      <br><a type="submit" href="{% url 'status6' object.id %}" class="btn btn-danger">Tool received. Finish contract.</a>
+                    {% endif %}
+
+
+
+                  {% else %}<!-- client side -->
+                    <li class="list-group-item list-group-item-light">
+                      <div style="color:green;">Started the contract. </div>
+                    </li>
+                    {% if object.status >= 1 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:darkgreen;">Tool handed over -by owner. </div>
+                      </li>
+                    {% endif %}
+                    {% if object.status >= 2 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:green;">Confirmed the tool receival. </div><br>
+                      </li>
+                    {% endif %}
+                    {% if object.status >= 3 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:green;">Payed the rent. </div><br>
+                      </li>
+                    {% endif %}
+                    {% if object.status >= 4 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:darkgreen;">Payment received -by owner. </div><br>
+                      </li>
+                    {% endif %}
+                    {% if object.status >= 5 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:green;">Given back the tool. </div><br>
+                      </li>
+                    {% endif %}
+                    {% if object.status == 6 %}
+                      <li class="list-group-item list-group-item-light">
+                        <div style="color:red;">Tool received and contract finished -by owner. </div><br>
+                      </li>
+                    {% endif %}
+
+
+                    {% if object.status == 0 %}
+                      Now you can take the tool from the owner, confirm that you received the tool and pay for the tool before you leave.
+                      <br><a type="submit" href="{% url 'status2' object.id %}" class="btn btn-info">Tool Received</a>
+                    {% elif object.status == 1 %}
+                      If you received the tool. Confirm it
+                      <br><a type="submit" href="{% url 'status2' object.id %}" class="btn btn-info">Tool Received</a>
+                    {% elif object.status == 2 %}
+                      If you payed the rent.
+                      <br><a type="submit" href="{% url 'status3' object.id %}" class="btn btn-info">Payment done</a>
+                    {% elif object.status == 3 %}
+                      <div style="color:red;">Pyment not confirmed by the owner.</div> Make sure owner confirmed it after payment.
+                    {% elif object.status == 4 %}
+                      Check the due date/time. On due date/time give back the tool.
+                      <br><a type="submit" href="{% url 'status5' object.id %}" class="btn btn-warning">Tool returned back</a>
+                    {% elif object.status == 5 %}
+                      <div style="color:red;">Tool receival not confirmed by owner</div>Make sure owner confirmed the tool receival and finished contract.
+                    {% endif %}
+                  {% endifequal %}
+                
+              </ul>
+            </p>
+    </div>
+    </div>
+{% endblock sidebar %}
+<!--  -->

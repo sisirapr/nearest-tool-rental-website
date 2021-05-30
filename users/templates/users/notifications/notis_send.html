@@ -1,0 +1,72 @@
+{% extends "users/notifications.html" %}
+{% block notis %}
+  <h2>Send Notifications</h2>
+  <hr>
+  {% for noti in notis %}
+    <article class="media content-section">
+          <div class="media-body">
+            {% if noti.status == 0 or noti.status == 1 or noti.status == 2 %}
+              <div class="article-metadata d-flex justify-content-between">
+                <div>My tool request</div>
+                <div><b>To:</b> {{ noti.to_user }}</div>
+              </div> 
+              <div class="row padding">
+                <div class="col-md-3 d-flex justify-content-center">
+                  <img class="rounded-circle" src="{{ noti.to_user.profile.image.url }}" width="80" height="80">
+                </div>
+                <div class="col-md-9">
+                  <h5 class="article-title">For tool: {{ noti.post }}</h5>
+                  <small class="text-muted">@{{ noti.date }} </small>{{noti.status }}<p>{{noti.text }}</p>
+                  <div class="d-flex justify-content-between">
+                    {% if noti.status == 0 %}
+                      <div style="color:blue;">Not replied yet</div>
+                    {% elif noti.status == 1 %}
+                      <div style="color:green;">Accepted</div>
+                    {% else %}
+                      <div style="color:red;">Rejected</div>
+                    {% endif %}
+                    <form method="post">
+                      <input type="hidden" name="noti_id" value="{{noti.id}}" />{% csrf_token %}
+                        <input type="submit" value="Delete" class="btn btn-outline-danger" onclick="return confirm('Are you sure?');">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="article-metadata d-flex justify-content-between">
+                <div>Reply to tool requests</div>
+                <div><b>To:</b> {{ noti.to_user }}</div>
+              </div> 
+              <div class="row padding">
+                <div class="col-md-3 d-flex justify-content-center">
+                  <img class="rounded-circle" src="{{ noti.to_user.profile.image.url }}" width="80" height="80">
+                </div>
+                <div class="col-md-9">
+                  <h5 class="article-title">For tool: {{ noti.reply_to.post }}</h5>
+                  <small class="text-muted">@{{ noti.date }} </small>{{noti.status }}
+                  <p>{{noti.text }}</p>
+                  <div class="d-flex justify-content-between">
+                    {% if noti.status == 3 %}
+                      <div style="color:red;">Rejected by me</div>
+                    {% else %}
+                      <div style="color:green;">Accepted by me</div>
+                    {% endif %}
+                  <form method="post">
+                    <input type="hidden" name="reply_id" value="{{noti.id}}" />{% csrf_token %}
+                      <input type="submit" value="Delete" class="btn btn-outline-danger" onclick="return confirm('Are you sure?');">
+                  </form>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+      </article>
+  {% endfor %}
+  {% for reply in replys %}
+    <article class="media content-section">
+          <div class="media-body" >
+            
+          </div>
+      </article>
+  {% endfor %}
+{% endblock notis %}

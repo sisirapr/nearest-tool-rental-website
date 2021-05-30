@@ -1,0 +1,29 @@
+{% extends "users/notifications.html" %}
+{% block notis %}
+  <h2>Read Notifications</h2>
+  <hr>
+  {% for noti in notis %}
+      <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata d-flex justify-content-between">
+              <div><b>From:</b> {{ noti.from_user }}</div>
+              <div><b>To:</b> {{ noti.to_user }}</div>
+            </div> 
+            <div class="row padding">
+              <div class="col-md-4 d-flex justify-content-center">
+                <img class="rounded-circle" src="{{ noti.from_user.profile.image.url }}" width="80" height="80">
+              </div>
+              <div>
+                <h5 class="article-title">For tool: {{ noti.post }}</h5>
+                <small class="text-muted">@{{ noti.date }} </small>{{noti.status }}<p>{{noti.text }}</p>
+                {% if noti.status == 2%}
+                  <div style="color:red;">I Rejected</div>
+                {% else %}
+                  <div style="color:green;">I Accepted</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+      </article>
+  {% endfor %}
+{% endblock notis %}

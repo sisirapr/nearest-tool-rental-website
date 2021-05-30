@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+{% block notis %}{% endblock %}
+{% endblock content %}
+
+{% block sidebar %}
+<br><br><br>
+  <div class="content-section">
+        <h3>Our Sidebar</h3>
+            <p class='text-muted'>
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">
+                  <a href="{% url 'mynotis' %}">Requests for my tools</a>
+                </li>
+                <li class="list-group-item list-group-item-light">
+                  <a href="{% url 'replynotis' %}">Replies To Me</a>
+                </li>
+                <li class="list-group-item list-group-item-light">
+                  <a href="{% url 'sendnotis' %}">Send Notifications</a>
+                </li>
+                <li class="list-group-item list-group-item-light">
+                </li>
+              </ul>
+            </p>
+    </div>
+    </div>
+{% endblock sidebar %}
+<!-- <a href="{% url 'readnotis' %}">Read Notifications</a> -->

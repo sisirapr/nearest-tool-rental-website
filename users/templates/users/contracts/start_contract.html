@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    	<article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">Tool Details</div>
+            <div class="row padding">
+              <div class="col-md-4">
+                <img class="img-thumbnail" src="{{ post.image.url }}" width="200" height="200">
+              </div>
+              <div>
+                <h2 class="article-title">{{ post.tool }}</h2>
+                <small class="text-muted">{{ post.content }}</small>
+                <p>Rent: <b>{{ post.rent }}</b> {{ post.rent_type }}</p>
+                <p class="article-content">Rating: {{ post.rating }}</p>
+                <a href="{% url 'rate-post' post.id %}" class="btn btn-outline-info">Rate Tool</a>
+              </div>
+            </div>
+          </div>
+      </article>
+<!-- Reviews div -->
+      <article class="media content-section">
+          <div class="media-body">
+            <br>
+            <div class="content-section">
+                <form name="calForm">
+                    <fieldset class="form-group">
+                      <legend class="border-bottom mb-4">Calculate Amount</legend>
+                      Period in
+                      {% if "Hour" in post.rent_type %}
+                        Hour
+                      {% elif "Day" in post.rent_type %}
+                        Day
+                      {% elif "Week" in post.rent_type %}
+                        Week
+                      {% elif "Month" in post.rent_type %}
+                        Month
+                      {% elif "Year" in post.rent_type %}
+                        Year
+                      {% endif %}<br>
+                      <input type="text" name="period">
+                      <button class="btn btn-outline-info" type="button" value="calc" onclick="total_rent();">Calculate</button><br>
+                      Total Rent <br><input type="text" name="totalrent">
+                    </fieldset>
+                </form>
+            </div>
+          </div>
+      </article>
+      <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata d-flex justify-content-between">Contract Details <small>{{review_count}} Do just before tool handover</small>
+            </div>
+            
+            <div class="content-section">
+                <form class="login-form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                      <legend class="border-bottom mb-4">Add Details</legend>
+                      {{ form|crispy }}
+                    </fieldset>
+                  <div class="form-group">
+                    <button class="btn btn-outline-success" type="submit">START</button>
+                  </div>
+                </form>
+            </div>
+          </div>
+      </article>
+{% endblock content %}
+
+{% block sidebar %}
+      <article class="content-section">
+          <div class="media-body">
+            <div class="article-metadata d-flex justify-content-between">Owner
+              <div class=""><a class="mr-2" href="#">Other Tools</a></div>
+            </div>
+            <div class="d-flex flex-column">
+              <div class="col-md-4 d-flex">
+                <img class="rounded-circle account-img" src="{{ post.owner.profile.image.url }}">
+              </div>
+              <div>
+                <h3 class="article-title">{{ post.owner.first_name }} {{ post.owner.last_name }}</h3>
+                Email To: <a class="mr-2" href="mailto: {{ post.owner.email }}">{{ post.owner.email }}</a><br>
+                Phone No: {{ post.owner.phone }}
+                <p class="article-content">Address: {{ post.owner.address }}</p>
+              </div>
+            </div>
+          </div>
+      </article>
+{% endblock sidebar %}
+
+{% block scripts %}
+<script type="text/javascript">
+  var rent={{ post.rent }};
+  function total_rent()
+  {
+    var p=parseFloat(document.calForm.period.value);
+    var t=rent*p;
+    document.calForm.totalrent.value=t;
+  }
+</script>
+{% endblock scripts %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block content %}
+  <h2>Tools Available</h2>
+  <hr>
+  
+    {% for post in filter.qs %}
+      <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ post.owner }}</a>
+            </div>
+            <div class="row padding">
+              <div class="col-md-4">
+                <img class="img-thumbnail" src="{{ post.image.url }}" width="200" height="200">
+              </div>
+              <div class="col-md-8">
+                <h3><a class="article-title" href="{% url 'post-detail' post.id %}">
+                {{ post.tool }}</a></h3>
+                <p class="text-muted">{{ post.content }}</p>
+                <div>Rent: <b>{{ post.rent }}</b> {{ post.rent_type }}<br>
+                Rating: {{ post.rating|floatformat:1 }}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+        
+    {% endfor %}
+{% endblock content %}
+
+{% block sidebar %}
+<br><br>
+  <div class="content-section">
+        <h4>Search Tools here..</h4>
+            <div class="form-group d-flex justify-content-between">
+              <form method="GET">
+                {{filter.form|bootstrap}}
+                <button class="btn btn-primary" type="submit">Search</button>
+              </form>
+            </div>
+  </div>
+{% endblock sidebar %}
+<!-- 
+  <div class="row">
+    <div class="col">
+      <div class="card card-body">
+        <form method="GET">
+          {{ myfilter.form }}
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </div> -->

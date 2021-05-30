@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+      <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata d-flex justify-content-between">
+              <div>Accept request</div>
+              <div><b>To:</b> {{ to_u }}</div>
+            </div>
+            <div class="row padding">
+              <div class="col-md-4"><br>
+                <img class="img-thumbnail" src="{{ to_u.profile.image.url }}" width="150" height="150">
+                <br><br><b>Client Name: </b>{{ to_u.first_name }} {{ to_u.last_name }}
+                <br><b>Email ID: </b>{{ to_u.email }}
+                <br><b>Address: </b>{{ to_u.address }}
+                <br><b>Phone No: </b>{{ to_u.phone }}
+              </div>
+              <div>
+                <h5 class="article-title">{{reply_to.post.tool}}</h5>
+                <b>Request: </b><small>{{ reply_to.text }}</small><hr>
+                <form method="POST" action="" role="form" class="col s12">
+                  {% csrf_token %}
+                  {{ form|crispy }}
+                  <button type="submit" name="action" class="btn btn-outline-info" onclick="return confirm('Are you sure?');">Send</button>
+                </form>
+              </div>
+            </div>
+          </div>
+      </article>
+{% endblock content %}
+
+{% block sidebar %}
+  <div class="content-section">
+        <h3>Post Details</h3>
+            <p class='text-muted d-flex col'>
+              <div class="col">
+                <img class="img-thumbnail" src="{{ reply_to.post.image.url }}" width="200" height="200">
+              </div><br>
+              <b>Name : </b>{{ reply_to.post.tool }}<br>
+              <b>Content : </b>{{ reply_to.post.content }}<br>
+              <b>Rent : </b>{{ reply_to.post.rent }} {{ reply_to.post.rent_type }}<br>
+              <b>Ratings : </b>{{ reply_to.post.rating }}<br>
+              {% if reply_to.post.available == True %}
+                Available for rent
+              {% else %}
+                Not available for rent
+              {% endif %}
+            </p>
+  </div>
+{% endblock sidebar %}

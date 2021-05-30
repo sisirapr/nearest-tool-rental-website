@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+{% block contract %}{% endblock %}
+{% endblock content %}
+
+{% block sidebar %}
+<br><br><br>
+  <div class="content-section">
+        <h3>Our Sidebar</h3>
+            <p class='text-muted'>
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">
+                  <a href="{% url 'contracts-ongoing' %}">Ongoing Contracts</a>
+                </li>
+                <li class="list-group-item list-group-item-light">
+                  <a href="{% url 'contract-history' %}">Contract History</a>
+                </li>
+              </ul>
+            </p>
+    </div>
+    </div>
+{% endblock sidebar %}
+<!-- <a href="{% url 'readnotis' %}">Read Notifications</a> -->

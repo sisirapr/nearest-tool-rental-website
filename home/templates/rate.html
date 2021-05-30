@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+      <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">Tool Details</div>
+            <div class="row padding">
+              <div class="col-md-4">
+                <img class="img-thumbnail" src="{{ post.image.url }}" width="150" height="150">
+              </div>
+              <div>
+                <h2 class="article-title">{{ post.tool }}</h2>
+                <small class="text-muted">{{ post.content }}</small>
+                <p>Rent: {{ post.rent }}</p>
+                <p class="article-content">Rating: {{ post.rating }}</p>
+                <!-- <button class="btn btn-success">Request</button> -->
+              </div>
+            </div>
+          </div>
+      </article>
+  <div class="row">
+    <div class="col s12 m12">
+      <div class="card horizontal">
+        <div class="card-stacked">
+          <div class="card-content">
+            <div class="divider"></div>
+            <br>
+            <form method="POST" action="" role="form" class="col s12">
+              {% csrf_token %}
+              {{ form|crispy }}
+              <button type="submit" name="action" class="btn btn-info">Rate</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

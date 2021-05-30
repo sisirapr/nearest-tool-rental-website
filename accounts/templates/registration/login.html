@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="content-section">
+  <div class="media">
+
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+          <legend class="border-bottom mb-4">Log In</legend>
+          {{ form|crispy }}
+        </fieldset>
+        <button class="btn btn-outline-info" type="submit">LOGIN</button>
+        <button class="btn btn-outline-secondary" type="button" onclick="location.href='{% url 'register' %}'">SIGN UP</button>
+    </form>
+  </div>
+</div>
+{% endblock content %}

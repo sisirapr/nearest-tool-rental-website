@@ -1,0 +1,50 @@
+{% extends "users/contracts/contracts.html" %}
+{% load bootstrap %}
+
+{% block contract %}
+  <h2>Contract History</h2>
+  <hr>
+  
+    {% for contract in contracts %}
+      {% ifequal contract.owner request.user %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata d-flex justify-content-between">
+              <div>My tool</div><div>Client: {{ contract.client }}</div>
+            </div>
+            <div class="row padding">
+              <div class="col-md-4">
+                <img class="img-thumbnail" src="{{ contract.post.image.url }}" width="100" height="100">
+              </div>
+              <div>
+                <h3><a class="article-title" href="{% url 'contract-detail' contract.id %}">
+                {{ contract.post.tool }}</a></h3>
+                <small class="text-muted">{{ contract.start_date }}</small>
+
+              </div>
+            </div>
+          </div>
+        </article>
+      {% else %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata d-flex justify-content-between">
+              <div class="ml-auto">Owner: {{ contract.owner }}</div>
+            </div>
+            <div class="row padding">
+              <div class="col-md-4">
+                <img class="img-thumbnail" src="{{ contract.post.image.url }}" width="100" height="100">
+              </div>
+              <div>
+                <h3><a class="article-title" href="{% url 'contract-detail' contract.id %}">
+                {{ contract.post.tool }}</a></h3>
+                <small class="text-muted">{{ contract.start_date }}</small>
+
+              </div>
+            </div>
+          </div>
+        </article>
+      {% endifequal %}
+        
+    {% endfor %}
+{% endblock contract %}

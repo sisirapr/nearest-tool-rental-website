@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+      <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata d-flex justify-content-between"> To: {{ to_user }}
+            <small class="text-muted">By {{ from_user }}</small>
+            </div>
+            <div class="row padding">
+              <div class="col-md-4 d-flex justify-content-center">
+                <img class="rounded-circle" src="{{ post.owner.profile.image.url }}" width="80" height="80">
+              </div>
+              <div>
+                <h5 class="article-title">Request for {{post.tool}}</h5>
+                <form method="POST" action="" role="form" class="col s12">
+                  {% csrf_token %}
+                  {{ form|crispy }}
+                  <button type="submit" name="action" class="btn btn-outline-info" onclick="return confirm('Are you sure?');">Send</button>
+                </form>
+              </div>
+            </div>
+          </div>
+      </article>
+{% endblock content %}
